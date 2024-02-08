@@ -1,15 +1,24 @@
 pipeline {
 	agent any
+	tools {
+		maven "Maven-3.6.3"
+		jdk "JDK-11"
+	}
 	stages {
 		stage ('Fetch the code') {
 			steps {
-				sh "git clone https://github.com/GVAJK/Testing.git"
-				sh "git branch main"
+				git branch: "main", url: "https://github.com/GVAJK/Testing.git"
 			}
 		}
-		stage ('Build the package') {
+		stage ('Build') {
 			steps {
 				sh "mvn install"
+				
+			}
+		}
+		stage ('Docker Build') {
+			steps {
+			sh 'docker build -t image${BUILD_BUMBER} .'
 			}
 		}
 	}
